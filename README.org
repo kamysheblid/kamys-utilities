@@ -35,6 +35,130 @@ Then in sbcl or whatever just use quicklisp to load it:
 Maybe later I will add this to quicklisp. Also if I am ever able to
 figure out how to communicate with the ultralisp.org site I will add
 it to that as well.
+** TODO TODO
+- Make a new and better json-mop package using this. The json-mop
+  package currently needs you to create all the slots before taking a
+  json object and turning it into an object. The =class-factory=
+  macro, actually the =make-default-slots= macro, needs a little bit
+  of recursion and it will be able to find all the keys and make an
+  object with slots as the keys, in fact now that I think about it the
+  recursion might have to be done in =class-factory= since we would
+  need to make multiple objects that are nested.
+
+  So if there is an Author object. Then it will also needa
+  Bibliography object and a Book object.
+
+  #+begin_src javascript
+    { 
+	"Author": 
+	{
+	    "Name": "Mark Twain"
+	    "Year": 1835
+	    "Bibliography": 
+	    {
+		[ { 
+		    "Book":
+		    { 
+			"Title": "The Gilded Age"
+			"Year": 1873
+			"Fiction": t
+		    }
+		},
+		  { 
+		      "Book":
+		      { 
+			  "Title": "Life on the Mississippi"
+			  "Year": 1883
+			  "Fiction": nil
+		      }
+		  },
+		  { 
+		      "Book":
+		      { 
+			  "Title": "Adventures of Huckleberry Fin"
+			  "Year": 1884
+			  "Fiction": t
+		      }
+
+		  }
+		]
+	    }
+	}
+    }
+
+  #+end_src
+
+  Their way is a bit odd and needs weird things like json-key and type
+  when it should be figured it out automatically. Though I need to
+  expand the =make-default-slots= to also handle initform and other
+  things too.
+
+  #+begin_src lisp
+    ;; json-mop class definitions
+    (defclass book ()
+      ((title :initarg :title
+	      :json-type :string
+	      :json-key "title")
+       (published-year :initarg :year
+	     :json-type :number
+	     :json-key "year_published")
+       (fiction :initarg :fiction
+		:json-type :bool
+		:json-key "is_fiction"))
+      (:metaclass json-serializable-class))
+
+    (defclass author ()
+      ((name :initarg :name
+	     :json-type :string
+	     :json-key "name")
+       (birth-year :initarg :year
+		   :json-type :number
+		   :json-key "year_birth")
+       (bibliography :initarg :bibliography
+		     :json-type (:list book)
+		     :json-key "bibliography"))
+      (:metaclass json-serializable-class))
+
+
+    ;;; My simpler definitions
+    (defclass book ()
+      ((TITLE :INITARG TITLE :ACCESSOR BOOK-TITLE)
+       (YEAR :INITARG YEAR :ACCESSOR BOOK-YEAR)
+       (FICTION :INITARG FICTION :ACCESSOR BOOK-FICTION)))
+
+    (defclass author ()
+      ((NAME :INITARG NAME :ACCESSOR AUTHOR-NAME)
+       (YEAR :INITARG YEAR :ACCESSOR AUTHOR-YEAR)
+       (BIBLIOGRAPHY :INITARG BIBLIOGRAPHY :ACCESSOR AUTHOR-BIBLIOGRAPHY)))
+  #+end_src
+
+  My method is simple and nicer and leaves more room for
+  customization.
+- Add initform and other stuff into =make-default-slots= macro. The
+  initform key will have to take a list and I think it will need to
+  check for a very specific keyword that will tell it to skip initform
+  for that particular slot.
+
+  If I want to make a slots list like this:
+
+  #+begin_src lisp
+    (defclass author ()
+      ((NAME :INITARG NAME :ACCESSOR AUTHOR-NAME :initform string)
+       (YEAR :INITARG YEAR :ACCESSOR AUTHOR-YEAR :initform integer)
+       (BIBLIOGRAPHY :INITARG BIBLIOGRAPHY :ACCESSOR AUTHOR-BIBLIOGRAPHY)))
+  #+end_src
+
+  Then I need to have a =make-default-slots= like this:
+
+  #+begin_src lisp
+    (class-factory author (name year bibliography)
+		   :accessor t :initarg t
+		   :initform (string integer SKIP))
+  #+end_src
+
+  The SKIP arg should be something obvious but also something that
+  cannot be mistakenly used by someone who forgot. It couldnt be nil
+  since I might want to have nil be the initial form of a slot.
 ** Author
 + kamy (kamy@mail.ir)
 ** Copyright
