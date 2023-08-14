@@ -1,6 +1,6 @@
-(defpackage kamys-class-utilities
+(defpackage kamys-utilities
   (:use :cl))
-(in-package :kamys-class-utilities)
+(in-package :kamys-utilities)
 
 (defmacro class-factory (class-name
 			 &key inherit slots initarg accessor)

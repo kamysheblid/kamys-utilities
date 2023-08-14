@@ -1,6 +1,6 @@
-(defpackage kamys-string-utilities
+(defpackage kamys-utilities
   (:use :cl))
-(in-package :kamys-string-utilities)
+(in-package :kamys-utilities)
 
 (defmacro string-concat (&rest strings)
-  `(concatenate 'string @,strings))
+  `(concatenate 'string ,@strings))
