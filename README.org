@@ -1,0 +1,38 @@
+* Kamys Utilities
+** Usage
+There are two modules at the moment:
+
+1. kamys-class-utlities
+2. kamys-string-utlities
+
+The class utilities has two automatic class making macro. I was
+creating a package manager and noticed that I would like to turn a
+json object into a CLOS object and made this to utility to handle
+that.
+
+The string utilities contains a string concatenation macro.
+** Dependencies
+Alexandria for the class utilities.
+** Installation
+*** Manual Method
+Copy paste the folder into quicklisp/local-projects/kamys-utilities,
+then use quicklisp to load it:
+
+#+begin_src lisp
+  (ql:quickload :kamys-utilities)
+#+end_src
+*** Git Method (Easier)
+#+begin_src bash
+  cd $HOME/quicklisp/local-projects
+  git clone https://github.com/kamysheblid/kamys-utilities
+#+end_src
+
+Then in sbcl or whatever just use quicklisp to load it:
+
+#+begin_src lisp
+  (ql:quickload :kamys-utilities)
+#+end_src
+** Author
++ kamy (kamy@mail.ir)
+** Copyright
+Copyright (c) 2023 kamy (kamy@mail.ir)
