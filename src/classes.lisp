@@ -1,13 +1,14 @@
-(defpackage kamys-utilities
-  (:use :cl))
-(in-package :kamys-utilities)
+(defpackage kamys-utilities/classes
+  (:use :cl)
+  (:export class-factory make-default-slots))
+(in-package :kamys-utilities/classes)
 
 (defmacro class-factory (class-name
 			 &key inherit slots initarg accessor)
 ;; add keys: function-prefix initform
 
   "CLASS-FACTORY macro creates a class with inheritance, and with slots
-that have accessor and initarg automatically. 
+that can have accessor and initarg. 
 
 ARGS:
 
@@ -28,6 +29,7 @@ _EXAMPLE_
 
 > (class-factory class-1 :inherit (class-parent-1 class-parent-2) :slots (slot-1 slot-2))
 #<STANDARD-CLASS COMMON-LISP-USER::CLASS-1>
+
 > (describe 'class-1)
 COMMON-LISP-USER::CLASS-1
   [symbol]
@@ -49,8 +51,10 @@ CLASS-1 names the standard-class #<STANDARD-CLASS COMMON-LISP-USER::CLASS-1>:
 
 > (defvar class-1-instance (make-instance 'class-1 'slot-1 \"abc\" 'slot-2 42))
 CLASS-1-INSTANCE
+
 > (class-1-slot-1 class-1-instance)
 \"abc\"
+
 > (setf (class-1-slot-2 class-1-instance) 3.14159)
 3.14159"
   (let ((slot-sub (eval `(make-default-slots ,class-name :slots ,slots
