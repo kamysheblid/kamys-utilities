@@ -3,7 +3,7 @@
   :author "kamy"
   :license ""
   :description "Kamy's utilities"
-  :in-order-to ((test-op (test-op "kamys utilities/tests"))))
+  :in-order-to ((test-op (test-op "kamys utilities/tests")))
   :depends-on ("alexandria")
   :components ((:module "src"
 		:components
