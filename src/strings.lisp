@@ -1,4 +1,5 @@
 (defpackage kamys-utilities/strings
+  (:nicknames :kamys-strings)
   (:use :cl)
   (:export string-concat))
 (in-package :kamys-utilities/strings)

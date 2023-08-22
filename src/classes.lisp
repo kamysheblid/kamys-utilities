@@ -1,6 +1,8 @@
 (defpackage kamys-utilities/classes
+  (:nicknames :kamys-classes)
   (:use :cl)
   (:export class-factory make-default-slots))
+
 (in-package :kamys-utilities/classes)
 
 (defmacro class-factory (class-name
