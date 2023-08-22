@@ -11,7 +11,7 @@ json object into a CLOS object and made this utility to handle that.
 
 The string utilities contains a single string concatenation macro.
 ** Dependencies
-- Alexandria for the class utilities.
+- Alexandria is needed for class and macro utlities.
 ** Installation
 *** Hard Method: Manual
 Copy paste the folder into quicklisp/local-projects/kamys-utilities,
