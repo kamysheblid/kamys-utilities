@@ -1,15 +1,20 @@
 * Kamys Utilities
 ** Usage
-There are two modules at the moment:
+There are five modules at the moment:
 
-1. kamys-class-utlities
-2. kamys-string-utlities
-
-The class utilities has two automatic class making macros. I was
-creating a package manager and noticed that I would like to turn a
-json object into a CLOS object and made this utility to handle that.
-
-The string utilities contains a single string concatenation macro.
+1. kamys-classes: has two automatic class making macros. I was
+   creating a package manager and noticed that I would like to turn a
+   json object into a CLOS object and made this utility to handle
+   that.
+2. kamys-strings: has string concatenation macro.
+3. kamys-macros: has threading macros -> and -<, defmacro/g! to avoid
+   variable capture, with-env to temporarily set env variables.
+4. kamys-lists: range which is like pythons range, nthcars which gives
+   the first n cars in a list, insert-to-nth which inserts an elt in
+   the nth position of a list.
+5. kamys-projects: contains some junk currently, but hopefully later
+   it will turn into something to more easily give package help like
+   in python help(module) and help(function).
 ** Dependencies
 - Alexandria is needed for class and macro utlities.
 ** Installation
