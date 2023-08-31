@@ -139,19 +139,6 @@ things too.
 #+end_src
 
 My method is simple and nicer and leaves more room for customization.
-*** Fix make-default-slots accessor
-Right now when I create the slots it outputs the initarg as symbols
-rather than keywords
-
-#+begin_src emacs-lisp
-  (kamys-utilities/classes:make-default-slots issue :slots (slot-1 slot-2) :accessor t :initarg t)
-  ;; => ((SLOT-1 :INITARG SLOT-1 :ACCESSOR ISSUE-SLOT-1)
-  ;;     (SLOT-2 :INITARG SLOT-2 :ACCESSOR ISSUE-SLOT-2)
-#+end_src
-
-It would be better if it were (slot-1 :initarg :slot-1) instead since
-it seems like most people prefer to use keywords to create the
-instance.
 *** Add :initform and other slot options
 Add initform and other stuff into =make-default-slots= macro. The
 initform key will have to take a list and I think it will need to
