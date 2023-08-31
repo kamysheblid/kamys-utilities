@@ -84,12 +84,16 @@ named in INHERIT and slots SLOTS.
 
 _EXAMPLE_
 
-> (make-default-slots issue :slots '(slot-1 slot-2) :initarg t :accessor t)
+> (make-default-slots issue :slots (slot-1 slot-2) :initarg t :accessor t)
 ((SLOT-1 :INITARG SLOT-1 :ACCESSOR ISSUE-SLOT-1)
  (SLOT-2 :INITARG SLOT-2 :ACCESSOR ISSUE-SLOT-2))"
   (let* ((prefix (or function-prefix class-name))
 	 (initarg-list (if initarg (list :initarg 'slot)))
 	 (accessor-list (if accessor 
-			    (list :accessor `(alexandria:symbolicate ',prefix  '- slot)))))
+			    (list :accessor `(alexandria:make-keyword 
+					      (concatenate 'string 
+							   (string ',prefix)
+							   "-"
+							   (string slot)))))))
     `(loop for slot in ',slots
 	   collect (list slot ,@initarg-list ,@accessor-list))))
