@@ -1,7 +1,7 @@
 (defpackage kamys-utilities/lists
   (:nicknames :kamys-lists)
   (:use #:cl)
-  (:export #:range #:insert-to-nth #:nthcars))
+  (:export #:range #:insert-to-nth #:nthcars #:filter))
 
 (in-package :kamys-utilities/lists)
 
@@ -70,7 +70,7 @@ _EXAMPLE_
 ;; => (0 1 2 3 4)
 > (range 2 5)
 ;; => (2 3 4)
-> (kamys-utilities/lists::range 2 5 2)
+> (range 2 5 2)
 ;; => (2 4)"
   (cond ((and (not stop) (not step))
 	 (progn (setq stop range)
@@ -80,3 +80,19 @@ _EXAMPLE_
 	 (setq step 1)))
   (loop for i from range below stop by step
 	collect i))
+
+(defun filter (pred lst)
+  "Build new list using elements from LST that eval to T when applied to
+PRED.
+
+_EXAMPLE_
+
+> (filter (lambda (x) (not (= x 1))) '(1 2 3))
+;; => (2 3)
+> (filter (lambda (x) (= x 0)) '(1 2 3))
+;; => NIL"
+  (cond ((null lst) lst)
+	((funcall pred (car lst))
+	 (cons (car lst) (filter pred (cdr lst))))
+	(t
+	 (filter pred (cdr lst)))))
