@@ -1,36 +1,68 @@
 (defpackage kamys-utilities/lists
   (:nicknames :kamys-lists)
   (:use #:cl)
-  (:export #:range #:insert-to-nth #:nthcars #:filter #:remove-nth))
+  (:export #:range #:insert-at-nth #:replace-nth #:nthcars #:filter #:remove-nth))
 
 (in-package :kamys-utilities/lists)
 
-(defun insert-to-nth (lst elt n)
-  "Insert an ELT in position N of LST. 
+(defun insert-at-nth (lst elt n)
+  "Insert ELT at index N in LST.
 
 It can also take negative values. The negative values are handled in a
 way so that the last element can be accessed, it is sort of counting
 the nil value at the end of every list.
 
 To access the first element using negative values use the negative of
-the length of the list but less one. So if the length is 10, then we
-use -11 to access the first element.
+the length of the list
 
 _EXAMPLE_
 
-> (insert-to-nth (range 10) 'a -1)
-;; => (0 1 2 3 4 5 6 7 8 9 A)
-> (insert-to-nth (range 10) 'a -10)
-;; => (0 A 1 2 3 4 5 6 7 8 9)
-> (insert-to-nth (range 10) 'a -11)
-;; => (A 0 1 2 3 4 5 6 7 8 9)
+> (range 10)
+(0 1 2 3 4 5 6 7 8 9)
+> (replace-nth (range 10) 'a -1)
+(0 1 2 3 4 5 6 7 8 A)
+> (replace-nth (range 10) 'a -10)
+(A 1 2 3 4 5 6 7 8 9)
+
+insert-to-nth positions:
+'( 0 1 2 3 4 5 6 )
+  0 1 2 3 4 5 6 7"
+  (let ((len (length lst))
+	pos)
+    (if (< n 0)
+	(setf pos (+ len n))
+	(setf pos n))
+    (when (or (> pos (1+ len)) (< pos 0))
+      (error
+       "The list is ~A elements long, so cannot put anything in position ~A"
+       (length lst) (if (< n 0) n pos)))
+    (append (subseq lst 0 pos) (list elt) (last lst (- len pos)))))
+
+
+(defun replace-nth (lst elt n)
+  "Replace index N in LST with ELT.
+
+It can also take negative values. The negative values are handled in a
+way so that the last element can be accessed, it is sort of counting
+the nil value at the end of every list.
+
+To access the first element using negative values use the negative of
+the length of the list
+
+_EXAMPLE_
+
+> (range 10)
+(0 1 2 3 4 5 6 7 8 9)
+> (replace-nth (range 10) 'a -1)
+(0 1 2 3 4 5 6 7 8 A)
+> (replace-nth (range 10) 'a -10)
+(A 1 2 3 4 5 6 7 8 9)
 
 _NOTE_
 
-I created this function for the threading macro in kamys-macros. The
-code is more legible and understandable with this function instead of
-using cars and cdrs. That is why I made the negative values a bit
-weird, because I needed to be able to push ELT to the end of the list."
+I created this function for the threading macros in kamys-macros. The
+code is more understandable with this function instead of using cars
+and cdrs."
   (let ((len (length lst))
 	pos)
     ;; If N is negative check if its valid and set to its equivalent
