@@ -1,24 +1,9 @@
 (defpackage kamys-utilities/lists
   (:nicknames :kamys-lists)
   (:use #:cl)
-  (:export #:range #:insert-to-nth #:nthcars #:filter))
+  (:export #:range #:insert-to-nth #:nthcars #:filter #:remove-nth))
 
 (in-package :kamys-utilities/lists)
-
-(defun nthcars (n lst)
-  "Like NTHCDR, but instead it returns a list containg the first n
-elements of LST.
-
-_EXAMPLE_
-
-> (kamys-utilities/lists::nthcars 5 '(1 2 3 4 5))
-;; => (1 2 3 4 5)
-> (kamys-utilities/lists::nthcars 2 '(1 2 3 4 5))
-;; => (1 2 3)"
-  (if (> n (length lst))
-      (error "N (~A) is larger than the length of the list: ~A" n (length lst))
-      (loop for i from 0 below n
-	    collect (nth i lst))))
 
 (defun insert-to-nth (lst elt n)
   "Insert an ELT in position N of LST. 
@@ -96,3 +81,12 @@ _EXAMPLE_
 	 (cons (car lst) (filter pred (cdr lst))))
 	(t
 	 (filter pred (cdr lst)))))
+
+(defun remove-nth (n lst)
+  "Returns LST with element at index N removed."
+  (let ((len (length lst)))
+    (unless (and (< n len) (>= n 0))
+      (error "Cant remove index ~A. List only has ~A elements" n len))
+    (let ((start (subseq lst 0 n))
+	  (end (last lst (- len n 1))))
+      (concatenate 'list start end))))
