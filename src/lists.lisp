@@ -31,17 +31,19 @@ I created this function for the threading macro in kamys-macros. The
 code is more legible and understandable with this function instead of
 using cars and cdrs. That is why I made the negative values a bit
 weird, because I needed to be able to push ELT to the end of the list."
-  (cond ((or (> n (length lst)) (< n (- -1 (length lst))))
-	 ;; N cannot be larger than the list, handle negative N's as
-	 ;; well.
-	 (error
-	  "The list is ~A elements long, so cannot put anything in position ~A"
-	  (length lst) n))
-	;; If N is negative check if its valid and set to its
-	;; equivalent positive integer.
-	((and (< n 0))
-	 (setf n (+ (length lst) n 1))))
-  (append (nthcars n lst) (list elt) (nthcdr n lst)))
+  (let ((len (length lst))
+	pos)
+    ;; If N is negative check if its valid and set to its equivalent
+    ;; positive integer.
+    (if (< n 0)
+	(setf pos (+ len n))
+	(setf pos n))
+    ;; N cannot be larger than the list
+    (when (or (> pos len) (< pos 0))
+      (error
+       "The list is ~A elements long, so cannot put anything in position ~A"
+       (length lst) (if (< n 0) n pos)))
+    (append (subseq lst 0 pos) (list elt) (last lst (- len pos 1)))))
 
 (defun range (range &optional stop step)
   "Supposed to be like python's range function. Give it 1 arg and it will
